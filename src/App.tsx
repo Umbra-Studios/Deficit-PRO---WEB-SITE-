@@ -23,15 +23,33 @@ import {
   TrendingUp,
   Calendar,
   ArrowDown,
-  ArrowUp
+  ArrowUp,
+  Info,
+  Settings,
+  Brain,
+  BookOpen,
+  ChevronLeft,
+  Search
 } from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const data = [
+  { day: 'jue', consumido: 400, quemado: 200 },
+  { day: 'vie', consumido: 2600, quemado: 1000 },
+  { day: 'sáb', consumido: 1800, quemado: 200 },
+  { day: 'dom', consumido: 1700, quemado: 600 },
+  { day: 'lun', consumido: 1900, quemado: 850 },
+  { day: 'mar', consumido: 3400, quemado: 1200 },
+  { day: 'mié', consumido: 400, quemado: 200 },
+];
 
 const FeatureCard = ({ children, title, icon: Icon, className = "" }: any) => (
   <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className={`glass-card p-6 ${className}`}
+    variants={{
+      hidden: { opacity: 0, y: 30 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    }}
+    className={`glass-card p-6 shadow-xl hover:shadow-brand-emerald/5 transition-all duration-500 ${className}`}
   >
     <div className="flex items-center gap-3 mb-4">
       <div className="p-2 rounded-lg bg-brand-emerald/10 text-brand-emerald">
@@ -62,7 +80,37 @@ const ProgressBar = ({ label, value, max, color = "bg-brand-emerald" }: any) => 
 
 export default function App() {
   return (
-    <div className="min-h-screen selection:bg-brand-emerald selection:text-black font-sans">
+    <div className="min-h-screen selection:bg-brand-emerald selection:text-black font-sans relative">
+      {/* Background Ambient Motion */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none opacity-50">
+        <motion.div 
+          animate={{ 
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-brand-emerald/10 blur-[120px] rounded-full"
+        />
+        <motion.div 
+          animate={{ 
+            x: [0, -100, 0],
+            y: [0, 100, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute top-1/4 -right-40 w-[500px] h-[500px] bg-[#00e5ff]/5 blur-[100px] rounded-full"
+        />
+        <motion.div 
+          animate={{ 
+            x: [0, 50, 0],
+            y: [0, -100, 0],
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-purple-500/5 blur-[100px] rounded-full"
+        />
+      </div>
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-6 backdrop-blur-md bg-brand-dark/80 border-b border-brand-border">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -151,103 +199,140 @@ export default function App() {
             className="relative flex justify-center"
           >
             {/* iPhone Frame */}
-            <div className="w-[280px] h-[560px] md:w-[320px] md:h-[640px] bg-[#1a1a1a] rounded-[3.5rem] p-3 border-[6px] border-neutral-800 shadow-2xl relative">
+            <div className="w-[300px] h-[600px] md:w-[340px] md:h-[680px] bg-[#1a1a1a] rounded-[3.5rem] p-3 border-[6px] border-neutral-800 shadow-2xl relative">
               {/* Screen Content */}
-              <div className="w-full h-full bg-[#030712] rounded-[2.8rem] overflow-hidden flex flex-col font-sans">
-                {/* Status Bar */}
-                  <div className="px-8 pt-10 pb-4 flex justify-between items-center bg-brand-dark/50">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-neutral-400">Hola, Usuario</span>
-                    <div className="flex items-center gap-1">
-                      <span className="text-base brand-logo">Deficit <span className="text-[#00e5ff]">Pro</span></span>
-                      <div className="w-4 h-4 rounded-full border border-white/20 flex items-center justify-center text-[8px]">i</div>
+              <div className="w-full h-full bg-[#030712] rounded-[2.8rem] overflow-hidden flex flex-col font-sans relative">
+                {/* Apps Header */}
+                <div className="px-6 pt-10 pb-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[10px] text-neutral-400 font-medium">Hola, Cristian Allende Haddad</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl font-black italic tracking-tighter uppercase">Deficit <span className="text-[#00e5ff]">Pro</span></span>
+                        <div className="flex items-center gap-1">
+                          <Info size={12} className="text-neutral-500" />
+                          <Settings size={12} className="text-neutral-500" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="flex items-center gap-1.5">
+                         <div className="bg-amber-500/90 rounded-lg px-2 py-0.5 flex items-center gap-1 shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                           <Star size={10} className="fill-black text-black" />
+                           <span className="text-[10px] font-black text-black leading-tight">41</span>
+                         </div>
+                      </div>
+                      <div className="bg-orange-500 rounded px-3 py-1 text-[8px] font-black text-black tracking-widest uppercase shadow-[0_2px_10px_rgba(249,115,22,0.4)]">
+                        Hazte Pro
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-[10px] font-bold">CL</div>
-                    <div className="bg-amber-500 rounded-full px-2 py-0.5 flex items-center gap-1">
-                      <Trophy size={10} className="fill-black text-black" />
-                      <span className="text-[10px] font-bold text-black">8</span>
+
+                  <div className="flex justify-center mt-6">
+                    <div className="flex items-center gap-8">
+                       <ChevronLeft size={16} className="text-blue-400" />
+                       <div className="bg-[#111827] px-8 py-2 rounded-full border border-white/5 text-xs font-black tracking-widest text-blue-400 italic">HOY</div>
+                       <ChevronRight size={16} className="text-neutral-800" />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex-1 p-6 flex flex-col items-center">
-                  <div className="text-[10px] uppercase tracking-widest text-brand-emerald font-bold mb-8">HOY</div>
-                  
-                  {/* Progress Circle */}
-                  <div className="relative w-48 h-48 mb-8">
-                    <svg className="w-full h-full" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="45" fill="none" stroke="#111827" strokeWidth="6" />
-                      <motion.circle 
-                        cx="50" cy="50" r="45" fill="none" stroke="#10b981" strokeWidth="6"
-                        strokeDasharray="283" initial={{ strokeDashoffset: 283 }} animate={{ strokeDashoffset: 80 }}
-                        transition={{ duration: 2, ease: "circOut" }} strokeLinecap="round"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-5xl font-bold tracking-tighter">1776</span>
-                      <span className="text-[10px] text-neutral-400">kcal restantes</span>
+                <div className="flex-1 px-6 flex flex-col items-center">
+                  {/* Progress Circle container */}
+                  <div className="relative mt-4">
+                    <div className="relative w-48 h-48 flex items-center justify-center">
+                       {/* SVG Progress */}
+                       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                         <circle cx="50" cy="50" r="42" fill="none" stroke="#111827" strokeWidth="8" />
+                         <motion.circle 
+                           cx="50" cy="50" r="42" fill="none" stroke="#10b981" strokeWidth="8"
+                           strokeDasharray="264" initial={{ strokeDashoffset: 264 }} animate={{ strokeDashoffset: 100 }}
+                           transition={{ duration: 2, ease: "easeOut" }} strokeLinecap="round"
+                           className="drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                         />
+                       </svg>
+                       <div className="absolute inset-0 flex flex-col items-center justify-center">
+                         <span className="text-5xl font-black italic tracking-tighter text-brand-emerald">703</span>
+                         <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-tight">kcal restantes</span>
+                       </div>
                     </div>
-                    {/* Floating Side Icons */}
-                    <div className="absolute top-[45%] -left-8 -translate-y-1/2 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30 border-2 border-white/10">
-                       <ChefHat size={12} className="text-white" />
-                    </div>
-                    <div className="absolute top-[34%] -right-8 w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/30 border-2 border-white/20">
-                       <Zap size={10} className="text-white" />
-                    </div>
-                    <div className="absolute top-[44%] -right-8 w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center shadow-lg shadow-purple-600/30 border-2 border-white/10">
-                       <ChefHat size={10} className="text-white" />
+
+                    {/* Floating Icons */}
+                    <motion.div 
+                       initial={{ scale: 0 }} animate={{ scale: 1 }}
+                       className="absolute top-1/2 -left-8 -translate-y-1/2 w-10 h-10 rounded-2xl bg-blue-600 border border-white/10 flex items-center justify-center text-white shadow-xl shadow-blue-500/20"
+                    >
+                       <BookOpen size={20} />
+                    </motion.div>
+
+                    <div className="absolute top-[35%] -right-8 flex flex-col gap-3">
+                       <motion.div 
+                          initial={{ scale: 0 }} animate={{ scale: 1 }}
+                          className="w-10 h-10 rounded-2xl bg-[#ff6b00] border border-white/10 flex items-center justify-center text-white shadow-xl shadow-orange-500/20 relative"
+                       >
+                          <Flame size={20} className="fill-white" />
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-brand-emerald rounded-full border border-brand-dark flex items-center justify-center">
+                             <CheckCircle2 size={8} className="text-black font-black" />
+                          </div>
+                       </motion.div>
+                       <motion.div 
+                          initial={{ scale: 0 }} animate={{ scale: 1 }}
+                          className="w-10 h-10 rounded-2xl bg-[#a855f7] border border-white/10 flex items-center justify-center text-white shadow-xl shadow-purple-500/20"
+                       >
+                          <Brain size={20} />
+                       </motion.div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 w-full mb-6">
-                    <div className="bg-brand-card/80 border border-white/5 p-4 rounded-2xl flex flex-col items-center">
-                      <span className="text-[8px] text-neutral-500 uppercase font-bold">CONSUMIDO</span>
-                      <span className="text-lg font-bold text-blue-400">261 kcal</span>
+                  <div className="grid grid-cols-2 gap-3 w-full mt-10">
+                    <div className="bg-[#111827] border border-white/5 p-4 rounded-2xl flex flex-col items-center">
+                      <span className="text-[7px] text-neutral-500 uppercase font-black tracking-widest leading-none mb-2">CONSUMIDO</span>
+                      <span className="text-lg font-black text-blue-400 italic tracking-tighter">1291 kcal</span>
                     </div>
-                    <div className="bg-brand-card/80 border border-white/5 p-4 rounded-2xl flex flex-col items-center">
-                      <span className="text-[8px] text-neutral-500 uppercase font-bold">QUEMADO</span>
-                      <span className="text-lg font-bold text-brand-emerald">0 kcal</span>
+                    <div className="bg-[#111827] border border-white/5 p-4 rounded-2xl flex flex-col items-center">
+                      <span className="text-[7px] text-neutral-500 uppercase font-black tracking-widest leading-none mb-2">QUEMADO</span>
+                      <span className="text-lg font-black text-brand-emerald italic tracking-tighter">0 kcal</span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 w-full mb-8">
-                    <button className="bg-blue-400 text-black py-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-sm">
-                      <span className="w-5 h-5 rounded-full border-2 border-black flex items-center justify-center font-bold">+</span>
-                      COMIDA
+                  <div className="grid grid-cols-2 gap-3 w-full mt-4">
+                    <button className="bg-blue-400 text-black py-4 rounded-2xl font-black italic tracking-tighter flex items-center justify-center gap-2 text-sm uppercase shadow-lg shadow-blue-500/20">
+                      <div className="w-5 h-5 rounded-full border-2 border-black flex items-center justify-center text-sm font-black">+</div>
+                      Comida
                     </button>
-                    <button className="bg-brand-emerald text-black py-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-sm">
-                      <span className="w-5 h-5 rounded-full border-2 border-black flex items-center justify-center font-bold">+</span>
-                      EJERCICIO
+                    <button className="bg-brand-emerald text-black py-4 rounded-2xl font-black italic tracking-tighter flex items-center justify-center gap-2 text-sm uppercase shadow-lg shadow-brand-emerald/20">
+                      <div className="w-5 h-5 rounded-full border-2 border-black flex items-center justify-center text-sm font-black">+</div>
+                      Ejercicio
                     </button>
                   </div>
 
-                  <div className="w-full space-y-4">
-                    <div className="flex justify-between items-center px-2">
-                      <span className="text-[10px] font-bold text-neutral-400 italic">AGUA <span className="opacity-50 text-[8px] font-light italic ml-1">- 1 vaso = 250cc</span></span>
+                  <div className="w-full mt-6 space-y-3">
+                    <div className="flex justify-between items-center px-1">
+                      <span className="text-[9px] font-black text-neutral-400 uppercase tracking-widest italic">Agua <span className="text-[7px] lowercase font-light ml-1">* 1 vaso = 250cc</span></span>
                     </div>
-                    <div className="bg-[#111827]/40 border border-white/5 p-5 rounded-[2.5rem] flex items-center justify-between">
-                       <button className="w-12 h-12 rounded-2xl bg-[#1e293b] flex items-center justify-center text-neutral-400 border border-white/5 shadow-inner">
-                          <div className="w-5 h-0.5 bg-neutral-400"></div>
-                       </button>
-                       <div className="flex flex-col items-center">
-                          <div className="relative w-28 h-10 bg-neutral-900 border border-white/5 rounded-xl overflow-hidden flex items-center">
-                             <div className="absolute inset-y-0 left-0 w-[40%] bg-blue-500/80 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-12 h-1 bg-white/5 rounded-full"></div>
-                             </div>
-                             {/* Small bottle cap detail */}
-                             <div className="absolute right-1 w-2 h-6 border-l border-white/10 flex flex-col gap-0.5 justify-center py-1">
-                                <div className="h-0.5 w-full bg-white/5"></div>
-                                <div className="h-0.5 w-full bg-white/5"></div>
+                    <div className="bg-[#111827]/60 border border-white/5 p-4 rounded-[2rem] flex items-center justify-between">
+                       <div className="flex-1 mr-4">
+                          <div className="relative w-full h-10 bg-neutral-900 border border-white/5 rounded-xl overflow-hidden flex items-center p-1">
+                             <div className="absolute inset-y-1 left-1 w-[55%] bg-blue-500/80 shadow-[0_0_15px_rgba(59,130,246,0.5)] rounded-lg"></div>
+                             <div className="absolute left-1/2 -translate-x-1/2 w-px h-full bg-white/5"></div>
+                             {/* Small tick marks */}
+                             <div className="absolute right-2 flex flex-col gap-0.5">
+                                {[1,2,5].map(i => <div key={i} className="w-4 h-0.5 bg-white/5"></div>)}
                              </div>
                           </div>
-                          <div className="mt-2 text-lg font-bold">4 <span className="text-[10px] text-neutral-500 uppercase tracking-tighter">/ 10</span></div>
+                          <div className="mt-1 text-center">
+                             <span className="text-2xl font-black italic leading-none">7 </span>
+                             <span className="text-[10px] text-neutral-500 uppercase font-black">/ 13</span>
+                          </div>
                        </div>
-                       <button className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/40 border border-white/20">
-                          <div className="text-2xl font-light transform -translate-y-0.5">+</div>
-                       </button>
+                       <div className="flex flex-col gap-2">
+                          <button className="w-10 h-10 rounded-2xl bg-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 border border-white/20">
+                             <span className="text-2xl font-light transform -translate-y-0.5">+</span>
+                          </button>
+                          <button className="w-10 h-8 rounded-xl bg-neutral-800 flex items-center justify-center text-neutral-400 border border-white/5">
+                             <div className="w-4 h-0.5 bg-neutral-400"></div>
+                          </button>
+                       </div>
                     </div>
                   </div>
                 </div>
@@ -436,66 +521,111 @@ export default function App() {
             className="order-2 lg:order-1 flex justify-center"
           >
             {/* Daily Challenges Mobile Mockup View */}
-            <div className="w-[280px] h-[560px] md:w-[320px] md:h-[640px] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl bg-[#030712] relative scale-90 sm:scale-100">
-              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-brand-dark/50">
-                <h2 className="text-xl font-display font-black tracking-tight italic">
-                  <span className="text-orange-500 uppercase">DESAFÍOS</span> <span className="text-purple-400 uppercase">DIARIOS</span>
+            <div className="w-[300px] h-[600px] md:w-[340px] md:h-[680px] border border-white/10 rounded-[3.5rem] overflow-hidden shadow-2xl bg-[#030712] relative scale-90 sm:scale-100 flex flex-col">
+              <div className="p-8 pb-6 flex justify-between items-center bg-[#030712]">
+                <h2 className="text-2xl font-black italic tracking-tighter uppercase leading-none">
+                  <span className="text-orange-500">DESAFÍOS</span> <span className="text-purple-500">DIARIOS</span>
                 </h2>
-                <div className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-[10px] opacity-30">✕</div>
+                <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-neutral-600 text-xs hover:text-white transition-colors cursor-pointer">✕</div>
               </div>
-              <div className="p-8 space-y-6">
-                <p className="text-[10px] text-neutral-400 leading-relaxed font-light">
-                  Completa estos objetivos diarios para ganar <span className="text-amber-500 font-bold">★</span> estrellas y canjearlas por acceso a funciones exclusivas. ¡Motívate y cumple tus metas cada día!
-                </p>
+
+              <div className="flex-1 overflow-y-auto px-6 pb-10 space-y-4">
+                <div className="pt-2 pb-6 border-t border-white/5">
+                  <p className="text-[10px] text-neutral-400 leading-relaxed font-light">
+                    Completa estos objetivos diarios para ganar <span className="text-amber-500 font-bold">★</span> estrellas y canjearlas por acceso a funciones exclusivas. ¡Motívate y cumple tus metas cada día!
+                  </p>
+                </div>
                 
-                {/* Challenge Card 1 */}
-                <div className="p-6 bg-[#061e1b] border border-brand-emerald/30 rounded-[2rem] relative overflow-hidden group">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-brand-emerald flex items-center justify-center shadow-lg shadow-brand-emerald/20 text-brand-dark">
-                       <Droplets size={28} />
+                {/* Challenge Card 1: Hidratación */}
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  className="p-5 bg-brand-emerald/5 border border-brand-emerald/30 rounded-3xl relative overflow-hidden group"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-emerald flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] text-brand-dark">
+                       <Droplets size={24} />
                     </div>
-                    <div className="text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]">
-                      <Trophy size={20} className="fill-amber-500" />
+                    <div className="flex flex-col items-end">
+                       <Star size={24} className="text-amber-500 fill-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold tracking-tight mb-1">Hidratación Completa</h4>
-                    <p className="text-[8px] font-black text-brand-emerald tracking-[0.2em] uppercase mb-4 italic">BEBE TODOS TUS VASOS DE AGUA.</p>
-                    <div className="h-2 w-full bg-[#111827] rounded-full overflow-hidden mb-3">
+                    <h4 className="text-lg font-black italic tracking-tighter mb-0.5">Hidratación Completa</h4>
+                    <p className="text-[8px] font-black text-brand-emerald tracking-widest uppercase mb-4 opacity-80">BEBE TODOS TUS VASOS DE AGUA.</p>
+                    <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden mb-3 relative">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "55%" }}
+                        transition={{ duration: 1.5, ease: "circOut" }}
+                        className="h-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]"
+                      ></motion.div>
+                    </div>
+                    <div className="flex justify-between items-center text-[9px] font-black italic uppercase">
+                       <span className="text-neutral-500 tracking-tighter">7 / 13 VASOS</span>
+                       <span className="text-brand-emerald tracking-tighter flex items-center gap-1">¡COMPLETADO! +1 <Star size={10} className="fill-brand-emerald" /></span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Challenge Card 2: Nutrición */}
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  className="p-5 bg-brand-emerald/5 border border-brand-emerald/30 rounded-3xl relative overflow-hidden group"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-emerald flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] text-brand-dark">
+                       <Apple size={24} />
+                    </div>
+                    <Star size={24} className="text-amber-500 fill-amber-500 opacity-60" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-black italic tracking-tighter mb-0.5">Nutrición Constante</h4>
+                    <p className="text-[8px] font-black text-orange-500 tracking-widest uppercase mb-4 opacity-80">REGISTRA AL MENOS 3 COMIDAS.</p>
+                    <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden mb-3">
                       <motion.div 
                         initial={{ width: 0 }}
                         whileInView={{ width: "100%" }}
-                        transition={{ duration: 1.5 }}
-                        className="h-full bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]"
+                        className="h-full bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.6)]"
                       ></motion.div>
                     </div>
-                    <div className="flex justify-between items-center text-[9px] font-bold">
-                       <span className="text-neutral-500 uppercase italic tracking-tighter">10 / 10 VASOS</span>
-                       <span className="text-brand-emerald uppercase tracking-tighter">¡COMPLETADO! +1 ★</span>
+                    <div className="flex justify-between items-center text-[9px] font-black italic uppercase">
+                       <span className="text-neutral-500 tracking-tighter">3 / 3 COMIDAS</span>
+                       <span className="text-brand-emerald tracking-tighter flex items-center gap-1">¡COMPLETADO! +1 <Star size={10} className="fill-brand-emerald" /></span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Challenge Card 2 */}
-                <div className="p-6 bg-[#061e1b] border border-brand-emerald/30 rounded-[2rem] relative opacity-60">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-brand-emerald flex items-center justify-center text-brand-dark">
-                       <div className="w-7 h-7 rounded-full border-4 border-brand-dark flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full bg-brand-dark"></div>
-                       </div>
+                {/* Challenge Card 3: Especial */}
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  className="p-5 bg-brand-emerald/5 border border-brand-emerald/30 rounded-3xl relative overflow-hidden group"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-emerald flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] text-brand-dark">
+                       <Star size={24} />
                     </div>
-                    <div className="text-amber-500 opacity-40">
-                      <Trophy size={20} />
-                    </div>
+                    <Star size={24} className="text-amber-500 fill-amber-500 opacity-60" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold tracking-tight mb-1 flex items-center gap-2">Nutrición Constante</h4>
-                    <p className="text-[8px] font-black text-neutral-500 tracking-[0.2em] uppercase mb-4 italic">REGISTRA AL MENOS 3 COMIDAS.</p>
-                    <div className="h-2 w-full bg-[#111827] rounded-full overflow-hidden mb-3">
-                      <div className="h-full w-0 bg-orange-500"></div>
+                    <h4 className="text-lg font-black italic tracking-tighter mb-0.5">Desafío Especial</h4>
+                    <p className="text-[8px] font-black text-purple-500 tracking-widest uppercase mb-4 opacity-80">USA EL SCANNER IA.</p>
+                    <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden mb-3">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        className="h-full bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.6)]"
+                      ></motion.div>
+                    </div>
+                    <div className="flex justify-between items-center text-[9px] font-black italic uppercase">
+                       <span className="text-neutral-500 tracking-tighter">2 / 1</span>
+                       <span className="text-brand-emerald tracking-tighter flex items-center gap-1">¡COMPLETADO! +1 <Star size={10} className="fill-brand-emerald" /></span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
+
+                <button className="w-full bg-blue-500 text-black py-5 rounded-2xl font-black italic tracking-tighter uppercase text-sm mt-4 shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">
+                   Cerrar
+                </button>
               </div>
             </div>
           </motion.div>
@@ -522,6 +652,146 @@ export default function App() {
                </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* AI Food Registration Section */}
+      <section className="py-24 px-12 bg-black relative overflow-hidden">
+        <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-blue-500/5 blur-[120px] rounded-full -translate-y-1/2 -z-10"></div>
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-20">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex-1 space-y-10"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-[0.2em] rounded border border-blue-500/20">
+              <Brain size={12} /> Scanner IA de Comida Completa
+            </div>
+            <h2 className="text-5xl md:text-6xl font-light tracking-tighter leading-tight">
+              Dile lo que comiste, <br/>
+              <span className="font-bold italic text-blue-400">Ella Entiende Todo.</span>
+            </h2>
+            <p className="text-neutral-400 text-lg leading-relaxed font-light max-w-lg">
+              No pierdas tiempo buscando ingrediente por ingrediente. Nuestra IA descompone platos complejos como un completo o un sánguche de potito en segundos.
+            </p>
+            
+            <div className="space-y-6">
+              <div className="glass-card p-6 border-white/5 bg-white/2">
+                <p className="text-xs font-bold text-neutral-500 mb-2 uppercase italic tracking-widest">Búsqueda Inteligente:</p>
+                <div className="bg-neutral-900 border border-brand-emerald/30 rounded-xl p-4 flex items-center gap-4">
+                  <motion.div 
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-2 h-2 rounded-full bg-brand-emerald"
+                  ></motion.div>
+                   <span className="text-sm font-medium italic">"sánguche de potito y un vaso de bebida"</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex-1 w-full flex justify-center"
+          >
+            {/* Food Log Mockup */}
+            <div className="w-full max-w-[360px] bg-[#030712] rounded-[3.5rem] border-8 border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col">
+              <div className="p-8 pb-4 flex justify-between items-center bg-[#030712] border-b border-white/5">
+                <h2 className="text-2xl font-black italic tracking-tighter uppercase leading-none">REGISTRAR COMIDA</h2>
+                <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-neutral-600 text-xs">✕</div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-6 pt-6 space-y-8 scrollbar-hide">
+                <div className="space-y-1">
+                  <h3 className="text-3xl font-black italic tracking-tighter uppercase text-white leading-tight">SÁNGUCHE DE POTITO</h3>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <h4 className="text-2xl font-black italic tracking-tighter uppercase">PORCIÓN(ES)</h4>
+                  <div className="w-14 h-16 bg-[#111827] border border-white/10 rounded-2xl flex items-center justify-center text-2xl font-black italic">1</div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 italic">INGREDIENTES DETECTADOS POR IA</span>
+                    <Info size={12} className="text-neutral-600" />
+                  </div>
+                  
+                  {[
+                    { name: 'Marraqueta', cal: 100 },
+                    { name: 'Recto de vacuno (Potito)', cal: 150 },
+                    { name: 'Longaniza', cal: 50 },
+                    { name: 'Cebolla y pimentón salteado', cal: 50 },
+                    { name: 'Mayonesa', cal: 20 },
+                    { name: 'Mostaza', cal: 10 }
+                  ].map((ing, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="flex items-center justify-between group"
+                    >
+                      <div className="flex items-center gap-3">
+                         <Zap size={14} className="text-neutral-500 italic" />
+                         <span className="text-sm font-black italic tracking-tighter uppercase text-neutral-300">{ing.name}</span>
+                      </div>
+                      <div className="w-20 h-10 bg-[#111827] border border-white/5 rounded-xl flex items-center justify-center text-xs font-black italic">{ing.cal} <span className="text-[10px] ml-1 opacity-40">g</span></div>
+                    </motion.div>
+                  ))}
+
+                  <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-500 italic hover:text-white transition-colors pt-2">
+                    <span className="text-lg">+</span> AGREGAR NUEVO INGREDIENTE
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-4 gap-2 pt-4">
+                  {[
+                    { label: 'KCAL', val: '870', color: 'blue' },
+                    { label: 'PROTE', val: '42g', color: 'emerald' },
+                    { label: 'CARB', val: '63g', color: 'orange' },
+                    { label: 'GRASA', val: '49g', color: 'pink' }
+                  ].map((macro, i) => (
+                    <div key={i} className={`bg-${macro.color}-500/10 border border-${macro.color}-500/20 p-2 rounded-xl text-center`}>
+                       <div className={`text-[7px] font-black text-${macro.color}-500 mb-1`}>{macro.label}</div>
+                       <div className="text-sm font-black italic tracking-tighter">{macro.val}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pb-10 pt-4 space-y-4">
+                  <div className="flex gap-3">
+                    <button className="flex-1 bg-neutral-900 py-5 rounded-2xl font-black italic uppercase tracking-tighter border border-white/10">Reintentar</button>
+                    <button className="flex-1 bg-blue-500 text-black py-5 rounded-2xl font-black italic uppercase tracking-tighter shadow-lg shadow-blue-500/30">GUARDAR</button>
+                  </div>
+                  
+                  <div className="space-y-3 pt-4">
+                    <div className="flex items-center gap-2">
+                       <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest italic">BUSCAR ALIMENTO</span>
+                       <span className="text-[7px] text-neutral-500 uppercase font-bold italic">- por si no tienes internet</span>
+                    </div>
+                    <div className="bg-neutral-800/50 border border-white/5 rounded-2xl px-6 py-4 flex items-center gap-4">
+                       <Search size={18} className="text-neutral-500" />
+                       <div className="flex items-center gap-2 text-neutral-500 text-sm italic font-medium">
+                          <span className="text-xl">📝</span> Escribir nombre del alimento
+                       </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button className="flex-1 bg-neutral-900 py-5 rounded-2xl font-black italic uppercase tracking-tighter border border-white/10 text-neutral-500">Cancelar</button>
+                    <button className="flex-1 bg-[#1e293b] py-5 rounded-2xl font-black italic uppercase tracking-tighter text-neutral-400">Guardar</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notch detail */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-neutral-900 rounded-b-2xl"></div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -698,34 +968,56 @@ export default function App() {
                       </div>
                    </div>
 
-                   {/* Mini Chart Mockup */}
-                   <div className="glass-card p-6 border-white/5 space-y-4">
-                      <div className="flex justify-between items-end">
+                   {/* Recharts Area Chart */}
+                   <div className="glass-card p-4 border-white/5 relative overflow-hidden">
+                      <div className="flex justify-between items-end mb-4">
                          <div>
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] italic">Balance Calórico</h4>
-                            <p className="text-[8px] text-neutral-500 uppercase font-bold italic">Entrada vs Salida</p>
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-emerald italic">Balance Calórico</h4>
+                            <p className="text-[8px] text-neutral-500 uppercase font-bold italic">Análisis Entrada vs Salida</p>
                          </div>
                       </div>
-                      <div className="h-24 w-full flex items-end gap-1.5 px-2">
-                         {[60, 90, 45, 55, 75, 100, 30].map((h, i) => (
-                           <div key={i} className="flex-1 space-y-1">
-                              <div className="relative w-full h-full flex flex-col justify-end">
-                                 <motion.div 
-                                    initial={{ height: 0 }}
-                                    whileInView={{ height: `${h}%` }}
-                                    className={`w-full rounded-t-sm ${i === 5 ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-brand-emerald opacity-60'}`}
-                                 ></motion.div>
-                                 <motion.div 
-                                    initial={{ height: 0 }}
-                                    whileInView={{ height: `${h * 0.4}%` }}
-                                    className="w-full bg-blue-500 opacity-80 rounded-t-sm"
-                                 ></motion.div>
-                              </div>
-                              <div className="text-[6px] text-neutral-600 font-bold text-center">
-                                 {['J', 'V', 'S', 'D', 'L', 'M', 'M'][i]}
-                              </div>
-                           </div>
-                         ))}
+                      <div className="h-40 w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                            <defs>
+                              <linearGradient id="colorConsumido" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                              </linearGradient>
+                              <linearGradient id="colorQuemado" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
+                            <XAxis 
+                              dataKey="day" 
+                              axisLine={false} 
+                              tickLine={false} 
+                              tick={{ fontSize: 8, fill: '#6b7280', fontWeight: 'bold' }} 
+                            />
+                            <Tooltip 
+                              contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '12px' }}
+                              itemStyle={{ fontSize: 10, fontWeight: 'bold' }}
+                            />
+                            <Area 
+                              type="monotone" 
+                              dataKey="consumido" 
+                              stroke="#3b82f6" 
+                              strokeWidth={2}
+                              fillOpacity={1} 
+                              fill="url(#colorConsumido)" 
+                            />
+                            <Area 
+                              type="monotone" 
+                              dataKey="quemado" 
+                              stroke="#10b981" 
+                              strokeWidth={2}
+                              fillOpacity={1} 
+                              fill="url(#colorQuemado)" 
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
                       </div>
                    </div>
 
@@ -793,67 +1085,91 @@ export default function App() {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
-          <FeatureCard title="Hidratación Diaria" icon={Droplets}>
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ staggerChildren: 0.15 }}
+          className="grid md:grid-cols-3 gap-8"
+        >
+          <FeatureCard title="Hidratación Avanzada" icon={Droplets}>
             <div className="flex justify-center mb-6">
-              {/* Water Bottle Visualization */}
-              <div className="relative w-12 h-24">
-                {/* Cap */}
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-4 h-2 bg-neutral-700 rounded-sm"></div>
-                {/* Neck */}
-                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-6 h-3 bg-neutral-800 rounded-sm"></div>
-                {/* Body */}
-                <div className="absolute top-4 w-full h-20 bg-neutral-900 border border-white/10 rounded-lg overflow-hidden">
-                   {/* Water Fill */}
+              {/* Specialized Hydration Visualization */}
+              <div className="relative w-16 h-28">
+                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-5 h-2 bg-neutral-700 rounded-sm"></div>
+                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-4 bg-neutral-800 rounded-sm"></div>
+                <div className="absolute top-5 w-full h-24 bg-neutral-900 border border-white/10 rounded-xl overflow-hidden shadow-inner">
                    <motion.div 
                     initial={{ height: 0 }}
-                    whileInView={{ height: "50%" }}
+                    whileInView={{ height: "72%" }}
                     transition={{ duration: 1.5, delay: 0.5 }}
-                    className="absolute bottom-0 w-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.4)]"
+                    className="absolute bottom-0 w-full bg-gradient-to-t from-blue-600 to-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.4)]"
                    ></motion.div>
                 </div>
               </div>
             </div>
-            <p className="text-4xl font-bold tracking-tighter text-center">2.4 <span className="text-sm font-normal text-neutral-500 uppercase tracking-widest ml-1">Litros</span></p>
-          </FeatureCard>
-
-
-          <FeatureCard title="Desafíos Elite" icon={Trophy}>
-            <div className="flex gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-brand-emerald/10 border border-brand-emerald/20 flex items-center justify-center text-brand-emerald">
-                <CheckCircle2 size={20} />
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-brand-border flex items-center justify-center text-neutral-700">
-                <Trophy size={20} />
-              </div>
-            </div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-brand-emerald mb-2">Current XP</div>
-            <p className="text-4xl font-bold tracking-tighter">4,850</p>
-          </FeatureCard>
-
-          <FeatureCard title="Nivel Macro" icon={CheckCircle2}>
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[10px] font-bold uppercase text-neutral-500 tracking-tighter italic">
-                  <span>Protein</span>
-                  <span className="text-brand-emerald">75%</span>
-                </div>
-                <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
-                  <div className="h-full w-[75%] bg-brand-emerald"></div>
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[10px] font-bold uppercase text-neutral-500 tracking-tighter italic">
-                   <span>Carbs</span>
-                   <span className="text-white">40%</span>
-                </div>
-                <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
-                  <div className="h-full w-[40%] bg-neutral-400"></div>
-                </div>
-              </div>
+            <div className="text-center">
+              <p className="text-4xl font-black italic tracking-tighter">7/13 <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">Vasos</span></p>
+              <div className="mt-2 text-[8px] font-black text-blue-400 uppercase tracking-widest opacity-80">55% de la meta diaria</div>
             </div>
           </FeatureCard>
-        </div>
+
+          <FeatureCard title="Distribución Macros" icon={Brain}>
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-black uppercase text-neutral-400 tracking-tighter italic">
+                  <span>Proteína</span>
+                  <span className="text-brand-emerald">125g / 150g</span>
+                </div>
+                <div className="h-1.5 w-full bg-neutral-800/50 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "83%" }}
+                    className="h-full bg-brand-emerald shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                  ></motion.div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-black uppercase text-neutral-400 tracking-tighter italic">
+                   <span>Carbos</span>
+                   <span className="text-blue-400">180g / 220g</span>
+                </div>
+                <div className="h-1.5 w-full bg-neutral-800/50 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "81%" }}
+                    className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                  ></motion.div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-black uppercase text-neutral-400 tracking-tighter italic">
+                   <span>Grasas</span>
+                   <span className="text-amber-500">45g / 65g</span>
+                </div>
+                <div className="h-1.5 w-full bg-neutral-800/50 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "69%" }}
+                    className="h-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                  ></motion.div>
+                </div>
+              </div>
+            </div>
+          </FeatureCard>
+
+          <FeatureCard title="Nivel de Energía" icon={Zap}>
+            <div className="h-32 flex items-center justify-center relative">
+               <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                  <Zap size={80} className="text-purple-500" />
+               </div>
+               <div className="text-center relative z-10">
+                  <p className="text-6xl font-black italic tracking-tighter text-purple-400">88%</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mt-2">Estado metabólico optimo</p>
+               </div>
+            </div>
+          </FeatureCard>
+        </motion.div>
       </section>
 
       {/* CTA Section */}
@@ -871,48 +1187,87 @@ export default function App() {
           </div>
 
           {/* Pricing Plans */}
-          <div className="grid md:grid-cols-3 gap-8 text-left">
-            <div className="glass-card p-8 border-brand-border">
-              <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4 block">Plan Initial</span>
-              <h4 className="text-2xl font-bold mb-2 italic">Gratis <span className="text-xs font-normal opacity-40 italic">con anuncios</span></h4>
-              <ul className="space-y-3 mt-6">
-                <li className="flex items-center gap-3 text-xs text-neutral-400">
-                  <CheckCircle2 size={14} className="text-brand-emerald" /> 1 Escaneo diario gratis
-                </li>
-                <li className="flex items-center gap-3 text-xs text-neutral-400">
-                  <CheckCircle2 size={14} className="text-brand-emerald" /> Registro manual ilimitado
-                </li>
-              </ul>
-            </div>
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ staggerChildren: 0.1 }}
+            className="max-w-xl mx-auto space-y-4"
+          >
+            <motion.div 
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+              className="text-center mb-8"
+            >
+              <h3 className="text-3xl font-display font-black tracking-tighter italic uppercase mb-4">Elige tu Plan Pro</h3>
+              <p className="text-neutral-400 text-sm font-light leading-relaxed">Sin anuncios, 30 mensajes con IA, 5 fotografías scan diarias.</p>
+            </motion.div>
 
-            <div className="glass-card p-8 border-brand-emerald/30 bg-brand-emerald/5 scale-105 shadow-2xl shadow-brand-emerald/10">
-              <span className="text-[10px] font-bold text-brand-emerald uppercase tracking-widest mb-4 block">Recommended</span>
-              <h4 className="text-2xl font-bold mb-2 italic">Pro 1 Mes</h4>
-              <p className="text-3xl font-bold italic mb-6">$4.990 <span className="text-xs font-normal opacity-40">/ mes</span></p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3 text-xs text-neutral-300">
-                  <CheckCircle2 size={14} className="text-brand-emerald" /> 5 Escaneos diarios IA
-                </li>
-                <li className="flex items-center gap-3 text-xs text-neutral-300 font-bold italic">
-                  <CheckCircle2 size={14} className="text-brand-emerald" /> IA Coach Chileno 24/7
-                </li>
-              </ul>
-            </div>
+            {/* Monthly */}
+            <motion.div 
+              variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ scale: 1.02, x: 5 }}
+              className="glass-card p-6 border-brand-border flex items-center justify-between group cursor-pointer"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30">
+                  <Calendar size={24} />
+                </div>
+                <div>
+                  <h4 className="font-black text-lg tracking-tighter uppercase italic">Mensual</h4>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-400 font-bold text-lg leading-tight">$4.990 CLP</span>
+                    <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest pl-2 border-l border-white/10">3 días gratis</span>
+                  </div>
+                </div>
+              </div>
+              <ChevronRight className="text-neutral-600 group-hover:text-white transition-colors" />
+            </motion.div>
 
-            <div className="glass-card p-8 border-brand-border">
-              <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4 block">Best Value</span>
-              <h4 className="text-2xl font-bold mb-2 italic">Pro 1 Año</h4>
-              <p className="text-3xl font-bold italic mb-6">$29.990 <span className="text-xs font-normal opacity-40">/ año</span></p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3 text-xs text-neutral-400">
-                  <CheckCircle2 size={14} className="text-brand-emerald" /> Todo lo de PRO
-                </li>
-                <li className="flex items-center gap-3 text-xs text-brand-emerald font-bold">
-                  <CheckCircle2 size={14} /> Ahorra 50% vs mensual
-                </li>
-              </ul>
-            </div>
-          </div>
+            {/* 3 Months */}
+            <motion.div 
+              variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ scale: 1.02, x: 5 }}
+              className="glass-card p-6 border-brand-border flex items-center justify-between group cursor-pointer"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400 border border-purple-500/30">
+                  <Star size={24} className="fill-purple-400" />
+                </div>
+                <div>
+                  <h4 className="font-black text-lg tracking-tighter uppercase italic">3 Meses</h4>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-400 font-bold text-lg leading-tight">$12.000 CLP</span>
+                    <span className="text-[10px] text-brand-emerald font-bold uppercase tracking-widest pl-2 border-l border-white/10 italic">Ahorra 20%</span>
+                  </div>
+                </div>
+              </div>
+              <ChevronRight className="text-neutral-600 group-hover:text-white transition-colors" />
+            </motion.div>
+
+            {/* Annual */}
+            <motion.div 
+              variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+              whileHover={{ scale: 1.02, x: 5 }}
+              className="glass-card p-6 border-[#00e5ff]/20 bg-[#00e5ff]/5 flex items-center justify-between group cursor-pointer relative"
+            >
+              <div className="absolute -top-3 right-8 bg-orange-500 text-black text-[8px] font-black uppercase px-3 py-1 rounded-full tracking-widest shadow-[0_0_15px_rgba(249,115,22,0.5)]">
+                Mejor Valor
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-500 border border-amber-500/30">
+                  <Star size={24} className="fill-amber-500" />
+                </div>
+                <div>
+                  <h4 className="font-black text-lg tracking-tighter uppercase italic">Anual</h4>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-400 font-bold text-lg leading-tight">$39.990 CLP</span>
+                    <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest pl-2 border-l border-white/10">($3.332 / mes)</span>
+                  </div>
+                </div>
+              </div>
+              <ChevronRight className="text-neutral-600 group-hover:text-white transition-colors" />
+            </motion.div>
+          </motion.div>
 
           {/* CTA Button */}
           <div className="flex flex-col items-center gap-8 pt-10">

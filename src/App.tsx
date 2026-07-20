@@ -104,17 +104,6 @@ const ProgressBar = ({ label, value, max, color = "bg-brand-emerald" }: any) => 
 const detectDefaultLanguage = (): "es" | "en" => {
   const saved = localStorage.getItem("deficitpro_lang");
   if (saved === "es" || saved === "en") return saved;
-  
-  if (typeof navigator !== "undefined") {
-    const langs = navigator.languages || [navigator.language];
-    for (const lang of langs) {
-      if (lang.toLowerCase().startsWith("es")) return "es";
-      if (lang.toLowerCase().startsWith("en")) return "en";
-    }
-    if (navigator.language && !navigator.language.toLowerCase().startsWith("es")) {
-      return "en";
-    }
-  }
   return "es";
 };
 
@@ -278,7 +267,7 @@ const translations = {
     controlBadge: "Operational Precision",
     controlTitle1: "Control",
     controlTitle2: "Total",
-    controlDesc: "Monitorea cada variable de tu salud con herramientas diseñadas para el rigor científico.",
+    controlDesc: "herramientas simples.",
     controlHydration: "Hidratación Avanzada",
     controlHydrationUnit: "Vasos",
     controlHydrationStatus: "55% de la meta diaria",
@@ -490,7 +479,7 @@ const translations = {
     controlBadge: "Operational Precision",
     controlTitle1: "Total",
     controlTitle2: "Control",
-    controlDesc: "Monitor every variable of your health with tools designed for clinical rigor.",
+    controlDesc: "simple tools.",
     controlHydration: "Advanced Hydration",
     controlHydrationUnit: "Glasses",
     controlHydrationStatus: "55% of daily goal",
